@@ -136,7 +136,8 @@ src/
 ├── hooks/
 │   └── useLibraryData.ts
 ├── services/
-│   ├── googleSheets.ts
+│   ├── csvService.ts
+│   ├── authService.ts
 │   └── notifications.ts
 ├── types/
 │   └── index.ts

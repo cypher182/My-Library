@@ -8,6 +8,9 @@ export interface CSVStudent {
   Name: string;
   email: string;
   'mobile number': string;
+  'Date of Birth': string;
+  Gender: string;
+  Shift: string;
   'parents name': string;
   "parent's mobile number": string;
 }
@@ -109,6 +112,9 @@ export const fetchStudentsFromCSV = async (): Promise<Student[]> => {
                   const email = getField(['Email Address', 'email', 'Email', 'E-mail', 'e-mail']);
                   const name = getField(['Name', 'name', 'student name', 'Student Name']);
                   const mobile = getField(['Mobile Number', 'mobile number', 'mobile', 'Mobile', 'phone', 'Phone']);
+                  const dateOfBirth = getField(['Date of Birth', 'date of birth', 'DOB', 'dob', 'Birth Date', 'birth date']);
+                  const gender = getField(['Gender', 'gender', 'Sex', 'sex']);
+                  const shift = getField(['Shift', 'shift', 'Timing', 'timing', 'Time Slot', 'time slot']);
                   const parentName = getField(["Parent's Name", 'Parents name', 'parents name', 'Parents Name', 'parent name', 'Parent Name', 'Guardian Name']);
                   const parentMobile = getField(["Parent's Mobile Number", "Parent's number", "parent's number", "Parent's mobile number", 'parent mobile', 'Parent Mobile', 'guardian mobile']);
                   const address = getField(['Address', 'address', 'home address', 'Home Address', 'student address', 'Student Address']);
@@ -117,10 +123,14 @@ export const fetchStudentsFromCSV = async (): Promise<Student[]> => {
 
 
                   // Skip rows with missing essential data
-                  if (!name || !mobile) {
-                    console.log(`Skipping row ${index + 1}: Missing name or mobile`, { name, mobile });
+                  if (!name || !mobile || !dateOfBirth || !gender || !shift) {
+                    console.log(`Skipping row ${index + 1}: Missing required fields`, { name, mobile, dateOfBirth, gender, shift });
                     return null;
                   }
+
+                  // Normalize gender and shift values
+                  const normalizedGender = gender.toLowerCase().includes('male') && !gender.toLowerCase().includes('female') ? 'Male' : 'Female';
+                  const normalizedShift = shift.includes('24') ? '24 hours' : '7 AM - 10 PM';
 
                   // Parse registration date from timestamp (format: MM/DD/YYYY HH:MM:SS)
                   let registrationDate = new Date();
@@ -144,15 +154,18 @@ export const fetchStudentsFromCSV = async (): Promise<Student[]> => {
                     name: name,
                     mobile: mobile,
                     email: email || undefined,
+                    dateOfBirth: dateOfBirth,
+                    gender: normalizedGender,
+                    shift: normalizedShift,
                     parentName: parentName || 'Not Provided',
-                    parentMobile: parentMobile || mobile, // Use student mobile if parent mobile not provided
+                    parentMobile: parentMobile || mobile,
                     address: address || undefined,
                     vehicleNumber: vehicleNumber || undefined,
                     photo: photo || undefined,
                     registrationDate: registrationDate.toISOString().split('T')[0],
                     feeExpiryDate: feeExpiryDate.toISOString().split('T')[0],
                     status: 'active',
-                    totalFeesPaid: 0, // Will be updated manually by owner
+                    totalFeesPaid: 0,
                   };
 
                   console.log(`Processed student ${index + 1}:`, student);

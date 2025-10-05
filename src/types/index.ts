@@ -3,6 +3,9 @@ export interface Student {
   name: string;
   mobile: string;
   email?: string;
+  dateOfBirth: string;
+  gender: 'Male' | 'Female';
+  shift: '7 AM - 10 PM' | '24 hours';
   parentName: string;
   parentMobile: string;
   address?: string;

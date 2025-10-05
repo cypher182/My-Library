@@ -97,10 +97,32 @@ const StudentManagement: React.FC<StudentManagementProps> = ({
       return;
     }
     
+    const dateOfBirth = formData.get('dateOfBirth') as string;
+    const gender = formData.get('gender') as 'Male' | 'Female';
+    const shift = formData.get('shift') as '7 AM - 10 PM' | '24 hours';
+
+    if (!dateOfBirth) {
+      setValidationError('Date of birth is required');
+      return;
+    }
+
+    if (!gender) {
+      setValidationError('Gender is required');
+      return;
+    }
+
+    if (!shift) {
+      setValidationError('Shift is required');
+      return;
+    }
+
     const studentData = {
       name,
       mobile,
       email: formData.get('email') as string,
+      dateOfBirth,
+      gender,
+      shift,
       parentName,
       parentMobile,
       address: formData.get('address') as string,
@@ -227,6 +249,42 @@ const StudentManagement: React.FC<StudentManagementProps> = ({
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                <input
+                  type="date"
+                  name="dateOfBirth"
+                  defaultValue={editingStudent?.dateOfBirth || ''}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select
+                  name="gender"
+                  defaultValue={editingStudent?.gender || ''}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Shift</label>
+                <select
+                  name="shift"
+                  defaultValue={editingStudent?.shift || ''}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
+                  <option value="">Select Shift</option>
+                  <option value="7 AM - 10 PM">7 AM - 10 PM</option>
+                  <option value="24 hours">24 hours</option>
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Parent Name</label>
                 <input
                   type="text"
@@ -348,6 +406,22 @@ const StudentManagement: React.FC<StudentManagementProps> = ({
                   <p className="text-sm text-gray-900">{viewingStudent.email}</p>
                 </div>
               )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+                  <p className="text-sm text-gray-900">{new Date(viewingStudent.dateOfBirth).toLocaleDateString('en-IN')}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Gender</label>
+                  <p className="text-sm text-gray-900">{viewingStudent.gender}</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Shift</label>
+                <p className="text-sm text-gray-900">{viewingStudent.shift}</p>
+              </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
