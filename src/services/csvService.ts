@@ -2,7 +2,7 @@
 import Papa from 'papaparse';
 import { Student } from '../types';
 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJYI6zpSzRgAhxtfMr75zAFiJqjuJC-5dRe81l-u5xevVQebaWqPRFmRqTR0r9rm1bXF_nVwg-ZVNY/pub?output=csv';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSKl0Bc0ERoeUpAH1Wg9cf47hthSxadP7SG-SE_cJp4m_vABNnCjxzGW6Vs-nZmJej5hviDG0QgpZpL/pub?gid=1752133491&single=true&output=csv';
 
 export interface CSVStudent {
   Name: string;
