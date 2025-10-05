@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, FileEdit as Edit, Trash2, Phone, Mail, Calendar, User, RefreshCw } from 'lucide-react';
+import { Plus, Search, FileEdit as Edit, Trash2, Phone, Mail, Calendar, User, RefreshCw, Trash } from 'lucide-react';
 import { Student } from '../types';
 
 interface StudentManagementProps {
@@ -48,6 +48,25 @@ const StudentManagement: React.FC<StudentManagementProps> = ({
       setTimeout(() => setRefreshMessage(''), 5000);
     } finally {
       setIsRefreshing(false);
+    }
+  };
+
+  const handleClearCacheAndRefresh = () => {
+    if (confirm('This will clear all cached data and reload fresh data from Google Sheets. Are you sure?')) {
+      // Clear localStorage
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('library_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+
+      setRefreshMessage('Cache cleared! Reloading page...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 
@@ -155,7 +174,7 @@ const StudentManagement: React.FC<StudentManagementProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
         <h2 className="text-2xl font-bold text-gray-900">Student Management</h2>
-        <div className="flex space-x-3">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
@@ -165,8 +184,15 @@ const StudentManagement: React.FC<StudentManagementProps> = ({
             <span>{isRefreshing ? 'Refreshing...' : 'Refresh from Sheets'}</span>
           </button>
           <button
+            onClick={handleClearCacheAndRefresh}
+            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <Trash className="w-4 h-4" />
+            <span>Clear Cache & Reload</span>
+          </button>
+          <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>Add Student</span>
